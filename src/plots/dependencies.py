@@ -88,7 +88,7 @@ class _LazyModule(ModuleType):
             raise ModuleNotFoundError(msg) from None
 
 
-def _lazy_import(module_name: str) -> tuple[ModuleType, bool]:
+def _lazy_import(module_name: str) -> ModuleType:
     """
     Lazy import the given module; avoids up-front import costs.
 
@@ -124,13 +124,7 @@ def _lazy_import(module_name: str) -> tuple[ModuleType, bool]:
 
     # create lazy/proxy module that imports the real one on first use
     # (or raises an explanatory ModuleNotFoundError if not available)
-    return (
-        _LazyModule(
-            module_name=module_name,
-            module_available=module_available,
-        ),
-        module_available,
-    )
+    return _LazyModule(module_name=module_name, module_available=module_available)
 
 
 if TYPE_CHECKING:
@@ -142,12 +136,12 @@ if TYPE_CHECKING:
     import shapely
 else:
     # heavy/optional third party libs
-    geopandas, _HVPLOT_AVAILABLE = _lazy_import("geopandas")
-    hvplot, _HVPLOT_AVAILABLE = _lazy_import("hvplot")
-    pandas, _PANDAS_AVAILABLE = _lazy_import("pandas")
-    plotly, _PANDAS_AVAILABLE = _lazy_import("plotly")
-    shapely, _PANDAS_AVAILABLE = _lazy_import("shapely")
-    geo, _PANDAS_AVAILABLE = _lazy_import("geo")
+    geopandas = _lazy_import("geopandas")
+    hvplot = _lazy_import("hvplot")
+    pandas = _lazy_import("pandas")
+    plotly = _lazy_import("plotly")
+    shapely = _lazy_import("shapely")
+    geo = _lazy_import("geo")
 
 
 __all__ = [
