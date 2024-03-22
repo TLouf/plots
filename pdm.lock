@@ -5,7 +5,7 @@
 groups = ["default", "plotly", "geo", "hvplot"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:c10700db854ada2b79a8a2636331980e2882e330d166e043e84c2461a501d3ec"
+content_hash = "sha256:894fe75b42cee21751c0f1298eb98d68e7d634f97aace32f055dbcdf64d49602"
 
 [[package]]
 name = "attrs"
@@ -269,6 +269,20 @@ files = [
     {file = "fonttools-4.50.0-cp312-cp312-win_amd64.whl", hash = "sha256:0ccc85fd96373ab73c59833b824d7a73846670a0cb1f3afbaee2b2c426a8f931"},
     {file = "fonttools-4.50.0-py3-none-any.whl", hash = "sha256:48fa36da06247aa8282766cfd63efff1bb24e55f020f29a335939ed3844d20d3"},
     {file = "fonttools-4.50.0.tar.gz", hash = "sha256:fa5cf61058c7dbb104c2ac4e782bf1b2016a8cf2f69de6e4dd6a865d2c969bb5"},
+]
+
+[[package]]
+name = "geo"
+version = "0.1.0"
+requires_python = ">=3.10"
+git = "https://github.com/TLouf/geo.git"
+ref = "main"
+revision = "af65633391dfa9375f83f95c3cbf6fa969a968ac"
+summary = "Default template for PDM package"
+groups = ["geo"]
+dependencies = [
+    "geopandas>=0.14.3",
+    "numpy>=1.26.4",
 ]
 
 [[package]]
@@ -587,6 +601,7 @@ requires_python = ">=3.9"
 summary = "Powerful data structures for data analysis, time series, and statistics"
 groups = ["geo", "hvplot"]
 dependencies = [
+    "numpy<2,>=1.22.4; python_version < \"3.11\"",
     "numpy<2,>=1.23.2; python_version == \"3.11\"",
     "numpy<2,>=1.26.0; python_version >= \"3.12\"",
     "python-dateutil>=2.8.2",

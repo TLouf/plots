@@ -18,7 +18,7 @@ plotly = [
     "plotly>=5.20.0",
 ]
 geo = [
-  "git+https://github.com/TLouf/geo",
+    "geo @ git+https://github.com/TLouf/geo.git@main",
 ]
 hvplot = [
     "hvplot>=0.9.2",
