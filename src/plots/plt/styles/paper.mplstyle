@@ -1,0 +1,7 @@
+savefig.dpi: 300
+figure.constrained_layout.use: True
+font.size: 7.0
+axes.labelsize: large
+mathtext.fontset: cm
+font.sans-serif: cmss10, Helvetica, DejaVu Sans, Bitstream Vera Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Avant Garde, sans-serif
+font.serif: cmr10, DejaVu Serif, Bitstream Vera Serif, New Century Schoolbook, Century Schoolbook L, Utopia, ITC Bookman, Bookman, Nimbus Roman No9 L, Times New Roman, Times, Palatino, Charter, serif
