@@ -7,6 +7,8 @@ import numpy as np
 
 if TYPE_CHECKING:
     from matplotlib.axes import Axes
+    from numpy import ndarray
+
 
 def mosaic_from_dict(d, ncols, cax: str | None = None):
     mosaic = list(d.keys())
@@ -61,14 +63,30 @@ def make_axes(
     return axes
 
 
-def dist_plot(data, base=10, bins=None, compl=False, cumul=False):
+def dist_plot(
+    x: str | ndarray | None = None,
+    y: str | ndarray | None = None,
+    data=None,
+    base=10,
+    bins=None,
+    compl=False,
+    cumul=False,
+):
     if base < 1:
         raise ValueError("base should be >= 1")
+
+    x = data[x] if isinstance(x, str) else x
+    y = data[y] if isinstance(y, str) else y
     if bins is None:
-        x_plot, y_plot = np.unique(data, return_counts=True)
+        if x is None or y is None:
+            x_plot, y_plot = np.unique(data, return_counts=True)
+        else:
+            x_plot, y_plot = x, y
     else:
+        if data is None:
+            data = x
         log_data = np.log(data) / np.log(base) if base > 1 else data
-        y_plot, edges = np.histogram(log_data, bins=bins)
+        y_plot, edges = np.histogram(log_data, bins=bins, weights=y)
         mask = y_plot > 0
         x_plot = (edges[1:] + edges[:-1]) / 2
         if base > 1:
