@@ -75,8 +75,8 @@ def dist_plot(
     if base < 1:
         raise ValueError("base should be >= 1")
 
-    x = data[x] if isinstance(x, str) else x
-    y = data[y] if isinstance(y, str) else y
+    x = np.asarray(data[x]) if isinstance(x, str) else x
+    y = np.asarray(data[y]) if isinstance(y, str) else y
     if bins is None:
         if x is None or y is None:
             x_plot, y_plot = np.unique(data, return_counts=True)
