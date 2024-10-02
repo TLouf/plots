@@ -75,19 +75,19 @@ def dist_plot(
     if base < 1:
         raise ValueError("base should be >= 1")
 
-    x = np.asarray(data[x]) if isinstance(x, str) else x
-    y = np.asarray(data[y]) if isinstance(y, str) else y
+    x = data[x] if isinstance(x, str) else x
+    y = data[y] if isinstance(y, str) else y
     if bins is None:
         if x is None or y is None:
             x_plot, y_plot = np.unique(data, return_counts=True)
         else:
             x_plot, y_plot = np.asarray(x), np.asarray(y)
     else:
-        if data is None:
-            data = x
-        data = np.asarray(data)
-        log_data = np.log(data) / np.log(base) if base > 1 else data
-        y_plot, edges = np.histogram(log_data, bins=bins, weights=np.asarray(y))
+        if x is None:
+            x = data
+        x = np.asarray(x)
+        log_x = np.log(x) / np.log(base) if base > 1 else x
+        y_plot, edges = np.histogram(log_x, bins=bins, weights=np.asarray(y))
         mask = y_plot > 0
         x_plot = (edges[1:] + edges[:-1]) / 2
         if base > 1:
