@@ -81,12 +81,13 @@ def dist_plot(
         if x is None or y is None:
             x_plot, y_plot = np.unique(data, return_counts=True)
         else:
-            x_plot, y_plot = x, y
+            x_plot, y_plot = np.asarray(x), np.asarray(y)
     else:
         if data is None:
             data = x
+        data = np.asarray(data)
         log_data = np.log(data) / np.log(base) if base > 1 else data
-        y_plot, edges = np.histogram(log_data, bins=bins, weights=y)
+        y_plot, edges = np.histogram(log_data, bins=bins, weights=np.asarray(y))
         mask = y_plot > 0
         x_plot = (edges[1:] + edges[:-1]) / 2
         if base > 1:
