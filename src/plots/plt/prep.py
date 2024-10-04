@@ -124,10 +124,10 @@ def binned_stat(
     x = np.asarray(data[x] if isinstance(x, str) else x)
     y = np.asarray(data[y] if isinstance(y, str) else y)
     log_x = np.log(x) / np.log(base) if base > 1 else x
-    binned_point_stat = scipy.stats.binned_statistic(
+    binned_point_stat = scipy.stats.binned_statistic_dd(
         log_x, y, statistic=point_statistic, bins=bins
     )
-    edges = binned_point_stat.bin_edges
+    edges = binned_point_stat.bin_edges[0]
     y_plot = binned_point_stat.statistic
     mask = y_plot > 0
     bin_centers = (edges[1:] + edges[:-1]) / 2
