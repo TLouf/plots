@@ -135,7 +135,7 @@ def binned_stat(
         bin_centers = base**bin_centers
 
     if error_percentile is None:
-        binned_std = scipy.stats.binned_statistic(
+        binned_std = scipy.stats.binned_statistic_dd(
             log_x,
             y,
             statistic="std",
@@ -145,13 +145,13 @@ def binned_stat(
         y_error = (y_error, y_error)
     else:
         half_compl_interval = (100 - error_percentile) / 2
-        binned_lower_err = scipy.stats.binned_statistic(
+        binned_lower_err = scipy.stats.binned_statistic_dd(
             log_x,
             y,
             statistic=lambda x: np.percentile(x, half_compl_interval),
             binned_statistic_result=binned_point_stat,
         )
-        binned_upper_err = scipy.stats.binned_statistic(
+        binned_upper_err = scipy.stats.binned_statistic_dd(
             log_x,
             y,
             statistic=lambda x: np.percentile(x, error_percentile + half_compl_interval),
