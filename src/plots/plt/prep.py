@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Collection
 
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.stats
 
 if TYPE_CHECKING:
     from matplotlib.axes import Axes
@@ -106,3 +107,58 @@ def dist_plot(
             x_plot = x_plot[:-1]
     ylabel = f"{compl * 'C'}{cumul * 'C'}DF"
     return x_plot, y_plot, ylabel
+
+
+def binned_stat(
+    x: str | np.ndarray,
+    y: str | np.ndarray,
+    data=None,
+    bins=10,
+    base=10,
+    point_statistic="mean",
+    error_percentile: int | None = None,
+):
+    if base < 1:
+        raise ValueError("base should be >= 1")
+
+    x = np.asarray(data[x] if isinstance(x, str) else x)
+    y = np.asarray(data[y] if isinstance(y, str) else y)
+    log_x = np.log(x) / np.log(base) if base > 1 else x
+    binned_point_stat = scipy.stats.binned_statistic(
+        log_x, y, statistic=point_statistic, bins=bins
+    )
+    edges = binned_point_stat.bin_edges
+    y_plot = binned_point_stat.statistic
+    mask = y_plot > 0
+    bin_centers = (edges[1:] + edges[:-1]) / 2
+    if base > 1:
+        bin_centers = base**bin_centers
+
+    if error_percentile is None:
+        binned_std = scipy.stats.binned_statistic(
+            log_x,
+            y,
+            statistic="std",
+            binned_statistic_result=binned_point_stat,
+        )
+        y_error = binned_std.statistic[mask]
+        y_error = (y_error, y_error)
+    else:
+        half_compl_interval = (100 - error_percentile) / 2
+        binned_lower_err = scipy.stats.binned_statistic(
+            log_x,
+            y,
+            statistic=lambda x: np.percentile(x, half_compl_interval),
+            binned_statistic_result=binned_point_stat,
+        )
+        binned_upper_err = scipy.stats.binned_statistic(
+            log_x,
+            y,
+            statistic=lambda x: np.percentile(x, error_percentile + half_compl_interval),
+            binned_statistic_result=binned_point_stat,
+        )
+        y_error = (binned_lower_err.statistic[mask], binned_upper_err.statistic[mask])
+
+    bin_centers = bin_centers[mask]
+    y_plot = y_plot[mask]
+    return bin_centers, y_plot, y_error
