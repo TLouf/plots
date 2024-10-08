@@ -88,7 +88,9 @@ def dist_plot(
             x = data
         x = np.asarray(x)
         log_x = np.log(x) / np.log(base) if base > 1 else x
-        y_plot, edges = np.histogram(log_x, bins=bins, weights=np.asarray(y))
+        if y is not None:
+            y = np.asarray(y)
+        y_plot, edges = np.histogram(log_x, bins=bins, weights=y)
         mask = y_plot > 0
         x_plot = (edges[1:] + edges[:-1]) / 2
         if base > 1:
