@@ -72,9 +72,12 @@ def dist_plot(
     bins=None,
     compl=False,
     cumul=False,
+    density=False,
 ):
     if base < 1:
         raise ValueError("base should be >= 1")
+    if density and bins is None:
+        raise ValueError("cannot compute densities without binning")
 
     x = data[x] if isinstance(x, str) else x
     y = data[y] if isinstance(y, str) else y
@@ -87,27 +90,39 @@ def dist_plot(
         if x is None:
             x = data
         x = np.asarray(x)
-        log_x = np.log(x) / np.log(base) if base > 1 else x
+        if base > 1:
+            bin_edges = np.logspace(
+                np.log(x.min()) / np.log(base), np.log(x.max()) / np.log(base), bins + 1
+            )
+        else:
+            bin_edges = np.linspace(x.min(), x.max(), bins + 1)
+
         if y is not None:
             y = np.asarray(y)
-        y_plot, edges = np.histogram(log_x, bins=bins, weights=y)
-        mask = y_plot > 0
-        x_plot = (edges[1:] + edges[:-1]) / 2
-        if base > 1:
-            x_plot = base**x_plot
 
-    y_plot = y_plot / y_plot.sum()
-    if cumul:
-        y_plot = y_plot.cumsum()
-    elif bins is not None:
+        y_plot, _ = np.histogram(x, bins=bin_edges, weights=y, density=density)
+        if base > 1:
+            x_plot = (bin_edges[1:] * bin_edges[:-1]) ** 0.5
+        else:
+            x_plot = (bin_edges[1:] + bin_edges[:-1]) / 2
+
+    if density:
+        ylabel = "PDF"
+    else:
+        y_plot = y_plot / y_plot.sum()
+        if cumul:
+            y_plot = y_plot.cumsum()
+        if compl:
+            y_plot = 1 - y_plot
+            if cumul:
+                y_plot = y_plot[:-1]
+                x_plot = x_plot[:-1]
+        ylabel = f"{compl * 'C'}{cumul * 'C'}DF"
+
+    if bins is not None and base > 1:
+        mask = y_plot > 0
         x_plot = x_plot[mask]
         y_plot = y_plot[mask]
-    if compl:
-        y_plot = 1 - y_plot
-        if cumul:
-            y_plot = y_plot[:-1]
-            x_plot = x_plot[:-1]
-    ylabel = f"{compl * 'C'}{cumul * 'C'}DF"
     return x_plot, y_plot, ylabel
 
 
