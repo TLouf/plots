@@ -159,22 +159,26 @@ def binned_stat(
             binned_statistic_result=binned_point_stat,
         )
         y_error = binned_std.statistic[mask]
-        y_error = (y_error, y_error)
+        y_error = np.vstack([y_error, y_error])
     else:
         half_compl_interval = (100 - error_percentile) / 2
         binned_lower_err = scipy.stats.binned_statistic_dd(
             log_x,
             y,
-            statistic=lambda x: np.percentile(y, half_compl_interval),
+            statistic=lambda a: np.percentile(a, half_compl_interval),
             binned_statistic_result=binned_point_stat,
         )
         binned_upper_err = scipy.stats.binned_statistic_dd(
             log_x,
             y,
-            statistic=lambda x: np.percentile(y, error_percentile + half_compl_interval),
+            statistic=lambda a: np.percentile(
+                a, error_percentile + half_compl_interval
+            ),
             binned_statistic_result=binned_point_stat,
         )
-        y_error = (binned_lower_err.statistic[mask], binned_upper_err.statistic[mask])
+        y_error = np.vstack(
+            [y - binned_lower_err.statistic[mask], binned_upper_err.statistic[mask] - y]
+        )
 
     bin_centers = bin_centers[mask]
     y_plot = y_plot[mask]
