@@ -165,13 +165,13 @@ def binned_stat(
         binned_lower_err = scipy.stats.binned_statistic_dd(
             log_x,
             y,
-            statistic=lambda x: np.percentile(x, half_compl_interval),
+            statistic=lambda x: np.percentile(y, half_compl_interval),
             binned_statistic_result=binned_point_stat,
         )
         binned_upper_err = scipy.stats.binned_statistic_dd(
             log_x,
             y,
-            statistic=lambda x: np.percentile(x, error_percentile + half_compl_interval),
+            statistic=lambda x: np.percentile(y, error_percentile + half_compl_interval),
             binned_statistic_result=binned_point_stat,
         )
         y_error = (binned_lower_err.statistic[mask], binned_upper_err.statistic[mask])
