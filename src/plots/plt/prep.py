@@ -177,7 +177,10 @@ def binned_stat(
             binned_statistic_result=binned_point_stat,
         )
         y_error = np.vstack(
-            [y - binned_lower_err.statistic[mask], binned_upper_err.statistic[mask] - y]
+            [
+                y_plot - binned_lower_err.statistic[mask],
+                binned_upper_err.statistic[mask] - y_plot,
+            ]
         )
 
     bin_centers = bin_centers[mask]
