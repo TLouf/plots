@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING, Collection
 
 import matplotlib.pyplot as plt
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
 
 def mosaic_from_iter(it, ncols, cax: str | None = None):
     mosaic = list(it)
-    nrows = np.ceil(len(mosaic) / ncols)
+    nrows = math.ceil(len(mosaic) / ncols)
     nr_empty = nrows * ncols - len(mosaic)
     mosaic.extend(["."] * nr_empty)
     mosaic = np.array(mosaic).reshape(nrows, ncols)
