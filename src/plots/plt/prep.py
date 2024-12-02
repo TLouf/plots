@@ -151,6 +151,8 @@ def binned_stat(
     bin_centers = (edges[1:] + edges[:-1]) / 2
     if base > 1:
         bin_centers = base**bin_centers
+    bin_centers = bin_centers[mask]
+    y_plot = y_plot[mask]
 
     if error_percentile is None:
         binned_std = scipy.stats.binned_statistic_dd(
@@ -184,6 +186,4 @@ def binned_stat(
             ]
         )
 
-    bin_centers = bin_centers[mask]
-    y_plot = y_plot[mask]
     return bin_centers, y_plot, y_error
