@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 def mosaic_from_dict(d, ncols, cax: str | None = None):
     mosaic = list(d.keys())
-    nr_empty = len(mosaic) % ncols
-    nrows = len(mosaic) // ncols + int(nr_empty > 0)
+    nrows = np.ceil(len(mosaic) / ncols)
+    nr_empty = nrows * ncols - len(mosaic)
     mosaic.extend(["."] * nr_empty)
     mosaic = np.array(mosaic).reshape(nrows, ncols)
     if cax is not None:
