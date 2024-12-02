@@ -11,8 +11,8 @@ if TYPE_CHECKING:
     from numpy import ndarray
 
 
-def mosaic_from_dict(d, ncols, cax: str | None = None):
-    mosaic = list(d.keys())
+def mosaic_from_iter(it, ncols, cax: str | None = None):
+    mosaic = list(it)
     nrows = np.ceil(len(mosaic) / ncols)
     nr_empty = nrows * ncols - len(mosaic)
     mosaic.extend(["."] * nr_empty)
