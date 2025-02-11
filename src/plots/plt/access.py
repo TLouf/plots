@@ -10,8 +10,7 @@ def get_ax(fig: Figure, label: str):
     for ax in fig.axes:
         if ax.get_label() == label:
             return ax
-    else:
-        raise ValueError("no ax found with label {0}".format(label))
+    raise ValueError("no ax found with label {0}".format(label))
 
 
 def get_colorbar_ax(fig: Figure):
