@@ -93,7 +93,10 @@ def dist_plot(
         x = np.asarray(x)
         if base > 1:
             bin_edges = np.logspace(
-                np.log(x.min()) / np.log(base), np.log(x.max()) / np.log(base), bins + 1
+                np.log(x.min()) / np.log(base),
+                np.log(x.max()) / np.log(base),
+                bins + 1,
+                base=base,
             )
         else:
             bin_edges = np.linspace(x.min(), x.max(), bins + 1)
