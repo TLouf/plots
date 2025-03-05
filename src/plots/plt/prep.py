@@ -136,7 +136,7 @@ def dist_plot(
                 x_plot = x_plot[:-1]
         ylabel = f"{compl * 'C'}{cumul * 'C'}DF"
 
-    if bins is not None and base > 1:
+    if bins is not None and base > 1 and "edge" not in bins_return:
         mask = y_plot > 0
         x_plot = x_plot[mask]
         y_plot = y_plot[mask]
