@@ -68,6 +68,7 @@ def make_axes(
 def dist_plot(
     x: str | ndarray | None = None,
     y: str | ndarray | None = None,
+    bins_return="centers",
     data=None,
     base=10,
     bins=None,
@@ -112,10 +113,15 @@ def dist_plot(
         y_plot, _ = np.histogram(
             x, bins=bin_edges, weights=y, density=density, range=hrange
         )
-        if base > 1:
-            x_plot = (bin_edges[1:] * bin_edges[:-1]) ** 0.5
+        if "center" in bins_return:
+            if base > 1:
+                x_plot = (bin_edges[1:] * bin_edges[:-1]) ** 0.5
+            else:
+                x_plot = (bin_edges[1:] + bin_edges[:-1]) / 2
+        elif "edge" in bins_return:
+            x_plot = bin_edges
         else:
-            x_plot = (bin_edges[1:] + bin_edges[:-1]) / 2
+            raise ValueError('`bins_return` must be either "centers" or "edges"')
 
     if density:
         ylabel = "PDF"
