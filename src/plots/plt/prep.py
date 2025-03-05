@@ -71,6 +71,8 @@ def dist_plot(
     data=None,
     base=10,
     bins=None,
+    xmin=None,
+    xmax=None,
     compl=False,
     cumul=False,
     density=False,
@@ -91,20 +93,25 @@ def dist_plot(
         if x is None:
             x = data
         x = np.asarray(x)
+        xmin = x.min() if xmin is None else xmin
+        xmax = x.max() if xmax is None else xmax
         if base > 1:
             bin_edges = np.logspace(
-                np.log(x.min()) / np.log(base),
-                np.log(x.max()) / np.log(base),
+                np.log(xmin) / np.log(base),
+                np.log(xmax) / np.log(base),
                 bins + 1,
                 base=base,
             )
         else:
-            bin_edges = np.linspace(x.min(), x.max(), bins + 1)
+            bin_edges = np.linspace(xmin, xmax, bins + 1)
 
         if y is not None:
             y = np.asarray(y)
 
-        y_plot, _ = np.histogram(x, bins=bin_edges, weights=y, density=density)
+        hrange = None if xmin is None or xmax is None else (xmin, xmax)
+        y_plot, _ = np.histogram(
+            x, bins=bin_edges, weights=y, density=density, range=hrange
+        )
         if base > 1:
             x_plot = (bin_edges[1:] * bin_edges[:-1]) ** 0.5
         else:
